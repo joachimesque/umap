@@ -77,6 +77,7 @@ from .utils import (
     json_dumps,
     merge_features,
 )
+from umap.galerie.models import get_map_points_json
 
 User = get_user_model()
 
@@ -692,6 +693,7 @@ class MapDetailMixin(SessionMixin):
         geojson["properties"].update(properties)
         geojson["properties"]["datalayers"] = self.get_datalayers()
         context["map_settings"] = json_dumps(geojson, indent=settings.DEBUG or None)
+        context["galerie_settings"] = get_map_points_json(self.get_id())
         self.set_preconnect(geojson["properties"], context)
         return context
 

@@ -4,6 +4,7 @@ import { Request } from '../request.js'
 import * as Utils from '../utils.js'
 import * as DOMUtils from '../domutils.js'
 import * as Icon from './icon.js'
+import * as Galerie from '../../../../galerie/galerie.js'
 
 export default async function loadTemplate(name, feature, container) {
   let klass = PopupTemplate
@@ -38,6 +39,7 @@ class PopupTemplate {
     const template = feature.getOption('popupContentTemplate')
     const target = feature.getOption('outlinkTarget')
     const properties = feature.extendedProperties()
+    const galerie = Galerie.getGalerie(feature.id)
     // Resolve properties inside description
     properties.description = Utils.greedyTemplate(
       feature.properties.description || '',
@@ -46,7 +48,7 @@ class PopupTemplate {
     properties.name = properties.name ?? feature.getDisplayName()
     let content = Utils.greedyTemplate(template, properties)
     content = Utils.toHTML(content, { target: target })
-    return Utils.loadTemplate(`<div class="umap-popup-container text">${content}</div>`)
+    return Utils.loadTemplate(`<div class="umap-popup-container text">${content}${galerie}</div>`)
   }
 
   renderFooter(feature) {

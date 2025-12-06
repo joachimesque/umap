@@ -1,10 +1,5 @@
-header {
-    margin: 14px 0;
-}
-
 footer {
     min-height: 140px;
-    margin-top: 40px;
     background-color: var(--color-darkBlue);
     color: var(--color-light);
     display: flex;

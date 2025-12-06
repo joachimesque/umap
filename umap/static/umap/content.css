@@ -5,6 +5,22 @@ body.content {
     width: 100%;
     height: 100%;
     overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+body.content > * {
+    flex-shrink: 0;
+}
+
+body.content main {
+    flex-grow: 1;
+}
+
+body.content header {
+    margin: 14px auto;
 }
 
 

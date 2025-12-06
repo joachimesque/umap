@@ -19,6 +19,8 @@
   {% endblock messages %}
 {% endblock header %}
 {% block content %}
+<main>
+  
   {% if UMAP_READONLY %}
     <div class="wrapper demo-instance-warning">
       <div class="row">
@@ -37,6 +39,7 @@
   {% endif %}
   {% block maincontent %}
   {% endblock maincontent %}
+</main>
 {% endblock content %}
 {% block bottom_js %}
   {{ block.super }}

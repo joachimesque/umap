@@ -83,7 +83,7 @@ def clean_exifdata(exifdata):
     return d
 
 
-def get_map_points_json(map_pk):
+def get_map_points_json(map_pk, user_can_edit):
     data = LayerPoint.objects.filter(layer__map=map_pk)
     output = {}
     for point in data:
@@ -92,11 +92,11 @@ def get_map_points_json(map_pk):
             picture.file.url,
             get_thumbnail(picture.file, "95x95", crop="center", ).url,
             datetime.strftime(picture.datetime, "%d %b %Y"),
-            reverse("admin:galerie_picture_change", args=[str(picture.uuid)])
+            reverse("admin:galerie_picture_change", args=[str(picture.uuid)]) if user_can_edit else None
         ) for picture in picture_objects]
         output[point.id] = {
             "pictures": pictures,
-            "point_admin_url": reverse("admin:galerie_layerpoint_change", args=[str(point.id)]),
+            "point_admin_url": reverse("admin:galerie_layerpoint_change", args=[str(point.id)]) if user_can_edit else None,
         }
 
     return json.dumps(output)

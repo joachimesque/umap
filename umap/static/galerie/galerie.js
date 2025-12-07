@@ -2,6 +2,8 @@ export const getGalerie = (point_id) => {
   const settings = JSON.parse(document.getElementById("galerie-settings").dataset.settings)
   const point = settings[point_id]
 
+  if (!point) return ""
+
   const point_admin_link = point["point_admin_url"] ? `<a href="${point["point_admin_url"]}" target="_blank" class="full_line">Point admin</a>` : ''
 
   const pictures = point["pictures"].map(p => {

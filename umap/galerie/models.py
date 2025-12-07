@@ -8,7 +8,6 @@ from django.dispatch import receiver
 from django.urls import reverse
 from PIL import Image
 from PIL.ExifTags import TAGS
-from dateutil.parser import parse
 from sorl.thumbnail import ImageField, get_thumbnail
 
 from umap.models import DataLayer
@@ -135,5 +134,5 @@ def extract_exif_date(sender, instance, created, **kwargs):
         exifdata = clean_exifdata(exifdata)
         exif_datetime = exifdata.get("DateTime")
         if exif_datetime:
-            instance.datetime = parse(exif_datetime)
+            instance.datetime = datetime.strptime(exif_datetime, '%Y:%m:%d %H:%M:%S')
             instance.save()

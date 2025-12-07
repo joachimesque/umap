@@ -59,7 +59,7 @@
     <div class="col half center mwide">
       {% spaceless %}
         <div class="button-bar {% if demo_map %}half{% endif %}">
-          {% if not UMAP_READONLY %}
+          {% if user.is_authenticated and not UMAP_READONLY %}
             <a href="{% url 'map_new' %}" class="button button-primary">{% trans "Create a map" %}</a>
           {% endif %}
           {% if demo_map %}

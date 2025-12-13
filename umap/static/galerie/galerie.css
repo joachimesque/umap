@@ -19,6 +19,11 @@
     img {
         display: block;
     }
+
+    &:has(div:nth-of-type(7)) div {
+        width: calc((100% - (2 * 10px)) / 3);
+        font-size: 0.84em;
+    }
 }
 
 .umap-popup-content:has(.content-galerie), .umap-popup-container {

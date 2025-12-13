@@ -442,7 +442,7 @@ export class DataLayer {
   addFeature(feature, sync = false) {
     feature.connectToDataLayer(this)
     this.features.add(feature)
-    this._umap.featuresIndex[feature.getSlug()] = feature
+    this._umap.featuresIndex[feature.id] = feature
     // TODO: quid for remote data ?
     this.inferFields(feature)
     if (!this.fields.size && !this._umap.fields.size) {

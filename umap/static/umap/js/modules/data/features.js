@@ -176,11 +176,10 @@ class Feature {
   }
 
   getPermalink() {
-    const slug = this.getSlug()
-    if (slug)
-      return `${Utils.getBaseUrl()}?${Utils.buildQueryString({ feature: slug })}${
-        window.location.hash
-      }`
+    const slug = this.id
+    return `${Utils.getBaseUrl()}?${Utils.buildQueryString({ feature: slug })}${
+      window.location.hash
+    }`
   }
 
   view({ latlng } = {}) {

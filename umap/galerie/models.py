@@ -87,7 +87,7 @@ def get_map_points_json(map_pk, user_can_edit):
     data = LayerPoint.objects.filter(layer__map=map_pk)
     output = {}
     for point in data:
-        picture_objects = point.picture_set.all()
+        picture_objects = point.picture_set.all().order_by("-datetime")
         pictures = [(
             picture.file.url,
             get_thumbnail(picture.file, "95x95", crop="center", ).url,

@@ -39,7 +39,7 @@ class LayerPointAdmin(admin.ModelAdmin):
         return f"{obj.layer.map} ({obj.layer.map.pk})" if obj.layer is not None else ""
 
     def pictures(self, obj):
-        pictures = obj.picture_set.all()
+        pictures = obj.picture_set.all().order_by("-datetime")
         pictures = [get_thumbnail(p.file, "80x80", crop="center") for p in pictures]
         pictures = [f"<img src='{p.url}' alt='' />" for p in pictures]
         return mark_safe(f"<div>{"".join(pictures)}</div>")
@@ -61,7 +61,7 @@ class PictureAdmin(AdminImageMixin, admin.ModelAdmin):
         "path",
         "lien",
     )
-    ordering = ('-upload_date','-datetime')
+    ordering = ('-datetime','-upload_date')
 
     list_filter = [
         "datetime",

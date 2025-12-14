@@ -13,14 +13,15 @@ from sorl.thumbnail import ImageField, get_thumbnail
 from umap.models import DataLayer
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 DEFAULT_PROPERTIES = {
-  "name": None,
-  "description": None,
-  "date confirmation": None,
-  "type": None,
-  "état bon/abimé/disparu": None,
+    "name": None,
+    "description": None,
+    "date confirmation": None,
+    "type": None,
+    "état bon/abimé/disparu": None,
 }
 
 
@@ -39,10 +40,10 @@ def signal_datalayer_save(sender, **kwargs):
 def signal_datalayer_delete(sender, **kwargs):
     datalayer = kwargs["instance"]
     merge_points(datalayer, "delete")
-    
+
 
 def merge_points(datalayer, signal_origin):
-    json_data = json.load(datalayer.geojson.open('r'))
+    json_data = json.load(datalayer.geojson.open("r"))
 
     if not json_data["type"] == "FeatureCollection":
         return
@@ -60,8 +61,10 @@ def merge_points(datalayer, signal_origin):
     for p in points:
         props = DEFAULT_PROPERTIES
         props = {**props, **p["properties"]}
-        if props["date confirmation"] is not None and props["date confirmation"].startswith("25-"):
-            props["date confirmation"] = f"20{props["date confirmation"]}"
+        if props["date confirmation"] is not None and props[
+            "date confirmation"
+        ].startswith("25-"):
+            props["date confirmation"] = f"20{props['date confirmation']}"
 
         obj, created = LayerPoint.objects.update_or_create(
             id=p["id"],
@@ -73,7 +76,7 @@ def merge_points(datalayer, signal_origin):
                 "type": props["type"],
                 "state": props["état bon/abimé/disparu"],
                 "json_data": p,
-            }
+            },
         )
 
 
@@ -93,15 +96,30 @@ def get_map_points_json(map_pk, user_can_edit):
     output = {}
     for point in data:
         picture_objects = point.picture_set.all().order_by("-datetime")
-        pictures = [(
-            picture.file.url,
-            get_thumbnail(picture.file, "95x95", crop="center", ).url,
-            datetime.strftime(picture.datetime, "%d %b %Y"),
-            reverse("admin:galerie_picture_change", args=[str(picture.uuid)]) if user_can_edit else None
-        ) for picture in picture_objects]
+        pictures = [
+            (
+                picture.file.url,
+                get_thumbnail(
+                    picture.file,
+                    "95x95",
+                    crop="center",
+                ).url,
+                datetime.strftime(picture.datetime, "%d %b %Y"),
+                (
+                    reverse("admin:galerie_picture_change", args=[str(picture.uuid)])
+                    if user_can_edit
+                    else None
+                ),
+            )
+            for picture in picture_objects
+        ]
         output[point.id] = {
             "pictures": pictures,
-            "point_admin_url": reverse("admin:galerie_layerpoint_change", args=[str(point.id)]) if user_can_edit else None,
+            "point_admin_url": (
+                reverse("admin:galerie_layerpoint_change", args=[str(point.id)])
+                if user_can_edit
+                else None
+            ),
         }
 
     return json.dumps(output)
@@ -109,7 +127,9 @@ def get_map_points_json(map_pk, user_can_edit):
 
 class LayerPoint(models.Model):
     id = models.CharField(unique=True, primary_key=True, editable=False, max_length=10)
-    layer = models.ForeignKey(DataLayer, on_delete=models.SET_NULL, blank=True, null=True)
+    layer = models.ForeignKey(
+        DataLayer, on_delete=models.SET_NULL, blank=True, null=True
+    )
     name = models.TextField(blank=True, null=True)
     type = models.TextField(blank=True, null=True)
     state = models.PositiveSmallIntegerField(blank=True, null=True)
@@ -126,14 +146,20 @@ class LayerPoint(models.Model):
 
     @property
     def permalink(self):
-        return f"{reverse("map", args=[self.map.slug, self.map.id])}?feature={self.id}"
+        url = reverse("map", args=[self.map.slug, self.map.id])
+        return f"{url}?feature={self.id}"
+
 
 class Picture(models.Model):
-    uuid = models.UUIDField(unique=True, primary_key=True, editable=False, default=uuid.uuid4)
+    uuid = models.UUIDField(
+        unique=True, primary_key=True, editable=False, default=uuid.uuid4
+    )
     file = ImageField(upload_to=get_upload_name)
     datetime = models.DateTimeField(blank=True, null=True)
     upload_date = models.DateTimeField(auto_now_add=True)
-    layer_point = models.ForeignKey(LayerPoint, on_delete=models.SET_NULL, null=True, blank=True)
+    layer_point = models.ForeignKey(
+        LayerPoint, on_delete=models.SET_NULL, null=True, blank=True
+    )
     comments = models.TextField(blank=True, default="")
 
 
@@ -144,5 +170,5 @@ def extract_exif_date(sender, instance, created, **kwargs):
         exifdata = clean_exifdata(exifdata)
         exif_datetime = exifdata.get("DateTime")
         if exif_datetime:
-            instance.datetime = datetime.strptime(exif_datetime, '%Y:%m:%d %H:%M:%S')
+            instance.datetime = datetime.strptime(exif_datetime, "%Y:%m:%d %H:%M:%S")
             instance.save()

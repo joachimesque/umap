@@ -16,24 +16,17 @@ class PictureInline(AdminImageMixin, admin.TabularInline):
 
 @admin.register(LayerPoint)
 class LayerPointAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "layer",
-        "map_id",
-        "date",
-        "pictures",
-        "lien"
-    )
+    list_display = ("id", "layer", "map_id", "date", "pictures", "lien")
 
-    ordering = ('-date',)
+    ordering = ("-date",)
 
     list_filter = [
-        'layer',
-        'layer__map',
+        "layer",
+        "layer__map",
     ]
 
     inlines = [
-      PictureInline,
+        PictureInline,
     ]
 
     def map_id(self, obj):
@@ -43,7 +36,7 @@ class LayerPointAdmin(admin.ModelAdmin):
         pictures = obj.picture_set.all().order_by("-datetime")
         pictures = [get_thumbnail(p.file, "80x80", crop="center") for p in pictures]
         pictures = [f"<img src='{p.url}' alt='' />" for p in pictures]
-        return mark_safe(f"<div>{"".join(pictures)}</div>")
+        return mark_safe(f"<div>{''.join(pictures)}</div>")
 
     def lien(self, obj):
         pl = obj.permalink
@@ -51,6 +44,7 @@ class LayerPointAdmin(admin.ModelAdmin):
 
     def view_on_site(self, obj):
         return obj.permalink
+
 
 @admin.register(Picture)
 class PictureAdmin(AdminImageMixin, admin.ModelAdmin):
@@ -62,7 +56,7 @@ class PictureAdmin(AdminImageMixin, admin.ModelAdmin):
         "path",
         "lien",
     )
-    ordering = ('-datetime','-upload_date')
+    ordering = ("-datetime", "-upload_date")
 
     list_filter = [
         "datetime",
@@ -95,4 +89,6 @@ class PictureAdmin(AdminImageMixin, admin.ModelAdmin):
         if not obj.layer_point:
             return ""
 
-        return mark_safe(f"<a href='{obj.layer_point.permalink}' target='_blank' class='button'>Voir →</a>")
+        return mark_safe(
+            f"<a href='{obj.layer_point.permalink}' target='_blank' class='button'>Voir →</a>"
+        )

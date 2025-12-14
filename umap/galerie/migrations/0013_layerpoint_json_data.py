@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('galerie', '0001_squashed_0012_alter_layerpoint_layer'),
+        ("galerie", "0001_squashed_0012_alter_layerpoint_layer"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='layerpoint',
-            name='json_data',
+            model_name="layerpoint",
+            name="json_data",
             field=models.JSONField(blank=True, null=True),
         ),
     ]

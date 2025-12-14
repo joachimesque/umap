@@ -9,6 +9,7 @@ from umap.models import Map
 from umap.galerie.models import Picture, merge_points
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -36,6 +37,6 @@ class Command(BaseCommand):
                     p.save()
                     self.stdout.write(self.style.SUCCESS(f"Image saved: {file_name}"))
             except Exception as e:
-               raise CommandError(e)
+                raise CommandError(e)
 
             image_temp_file.flush()

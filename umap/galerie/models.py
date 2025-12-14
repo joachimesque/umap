@@ -119,6 +119,9 @@ class LayerPoint(models.Model):
     def __str__(self):
         return self.id
 
+    @property
+    def permalink(self):
+        return f"{reverse("map", args=[self.map.slug, self.map.id])}?feature={self.id}"
 
 class Picture(models.Model):
     uuid = models.UUIDField(unique=True, primary_key=True, editable=False, default=uuid.uuid4)

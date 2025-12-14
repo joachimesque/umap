@@ -24,6 +24,11 @@ DEFAULT_PROPERTIES = {
 }
 
 
+def get_upload_name(instance, filename):
+    filename = f"{uuid.uuid7()}_{filename}"
+    return filename
+
+
 @receiver(post_save, sender=DataLayer)
 def signal_datalayer_save(sender, **kwargs):
     datalayer = kwargs["instance"]
@@ -125,7 +130,7 @@ class LayerPoint(models.Model):
 
 class Picture(models.Model):
     uuid = models.UUIDField(unique=True, primary_key=True, editable=False, default=uuid.uuid4)
-    file = ImageField()
+    file = ImageField(upload_to=get_upload_name)
     datetime = models.DateTimeField(blank=True, null=True)
     upload_date = models.DateTimeField(auto_now_add=True)
     layer_point = models.ForeignKey(LayerPoint, on_delete=models.SET_NULL, null=True, blank=True)

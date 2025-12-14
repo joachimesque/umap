@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 from sorl.thumbnail.admin import AdminImageMixin
 
@@ -56,7 +57,7 @@ class PictureAdmin(AdminImageMixin, admin.ModelAdmin):
     list_display = (
         "thumbnail",
         "datetime",
-        "layer_point",
+        "layer_point_url",
         "upload_date",
         "path",
         "lien",
@@ -71,6 +72,13 @@ class PictureAdmin(AdminImageMixin, admin.ModelAdmin):
 
     def path(self, obj):
         return obj.file.path
+
+    @admin.display(description="Layer point")
+    def layer_point_url(self, obj):
+        if not obj.layer_point:
+            return "-"
+        url = reverse("admin:galerie_layerpoint_change", args=[obj.layer_point.pk])
+        return mark_safe(f"<a href='{url}'>{obj.layer_point}</a>")
 
     def thumbnail(self, obj):
         if obj.file:

@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models.signals import pre_save, post_save, pre_delete
 from django.dispatch import receiver
 from django.urls import reverse
+from django.utils.crypto import get_random_string
 from PIL import Image
 from PIL.ExifTags import TAGS
 from sorl.thumbnail import ImageField, get_thumbnail
@@ -26,7 +27,7 @@ DEFAULT_PROPERTIES = {
 
 
 def get_upload_name(instance, filename):
-    filename = f"{uuid.uuid7()}_{filename}"
+    filename = f"{get_random_string(8)}_{filename}"
     return filename
 
 

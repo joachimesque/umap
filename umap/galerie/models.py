@@ -139,6 +139,8 @@ class LayerPoint(models.Model):
 
     @property
     def map(self):
+        if not self.layer:
+            return None
         return self.layer.map
 
     def __str__(self):
@@ -146,6 +148,8 @@ class LayerPoint(models.Model):
 
     @property
     def permalink(self):
+        if not self.map:
+            return None
         url = reverse("map", args=[self.map.slug, self.map.id])
         return f"{url}?feature={self.id}"
 

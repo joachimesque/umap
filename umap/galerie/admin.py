@@ -40,6 +40,8 @@ class LayerPointAdmin(admin.ModelAdmin):
 
     def lien(self, obj):
         pl = obj.permalink
+        if not pl:
+            return None
         return mark_safe(f"<a href='{pl}' target='_blank' class='button'>Voir →</a>")
 
     def view_on_site(self, obj):
@@ -86,7 +88,7 @@ class PictureAdmin(AdminImageMixin, admin.ModelAdmin):
         return obj.layer_point.permalink
 
     def lien(self, obj):
-        if not obj.layer_point:
+        if not obj.layer_point or not obj.layer_point.permalink:
             return ""
 
         return mark_safe(

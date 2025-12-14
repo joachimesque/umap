@@ -54,8 +54,8 @@ def merge_points(datalayer, signal_origin):
 
     for p in points:
         props = DEFAULT_PROPERTIES
-        props.update(p["properties"])
-        if props["date confirmation"].startswith("25-"):
+        props = {**props, **p["properties"]}
+        if props["date confirmation"] is not None and props["date confirmation"].startswith("25-"):
             props["date confirmation"] = f"20{props["date confirmation"]}"
 
         obj, created = LayerPoint.objects.update_or_create(
@@ -67,6 +67,7 @@ def merge_points(datalayer, signal_origin):
                 "date": props["date confirmation"],
                 "type": props["type"],
                 "state": props["état bon/abimé/disparu"],
+                "json_data": p,
             }
         )
 
@@ -109,6 +110,7 @@ class LayerPoint(models.Model):
     state = models.PositiveSmallIntegerField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     date = models.DateField(blank=True, null=True)
+    json_data = models.JSONField(blank=True, null=True)
 
     @property
     def map(self):

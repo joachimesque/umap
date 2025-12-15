@@ -94,3 +94,15 @@ class PictureAdmin(AdminImageMixin, admin.ModelAdmin):
         return mark_safe(
             f"<a href='{obj.layer_point.permalink}' target='_blank' class='button'>Voir →</a>"
         )
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "layer_point":
+            kwargs["queryset"] = LayerPoint.objects.all().order_by('pk')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(PictureAdmin, self).get_form(request, obj, **kwargs)
+        form.base_fields['layer_point'].widget.can_add_related = False
+        form.base_fields['layer_point'].widget.can_change_related = False
+        form.base_fields['layer_point'].widget.can_delete_related = False
+        return form

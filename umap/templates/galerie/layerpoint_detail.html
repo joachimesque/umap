@@ -25,51 +25,61 @@
 {% block content %}
 <main class="wrapper">
   <div class="row">
-    <h1>Point : <mark>{{ object.pk }}</mark></h1>
     <p><a href="{% url 'galerie:index' %}">← Retour</a></p>
     <section class="galerie_layerpoint-detail">
-        <div>
-            <a href="{{ object.permalink }}" class="point_link"><img src="{{ object.get_thumbmap }}" alt="" /></a>
+        <h1>Point : <mark>{{ object.pk }}</mark></h1>
+
+        {% if user.is_authenticated %}
+            <a target="_blank" class="admin_link" href="{% url 'admin:galerie_layerpoint_change' object.pk %}">Admin</a>
+        {% endif %}
+
+        <div class="point_thumbmap">
+            <a href="{{ object.permalink | default:'#' }}" class="point_link"><img src="{{ object.get_thumbmap }}" alt="" /></a>
         </div>
+        
+        <div class="point_content">
+            <p class="point_info">
+                <span>
+                    {{ layer_point.layer | default:"Pas de calque" }},
+                    <date>{{ layer_point.date | default:"Pas de date" }}</date>
+                </span><br>
 
-        <p class="point_info">
-            {% if user.is_authenticated %}
-                <a target="_blank" class="admin_link" href="{% url 'admin:galerie_layerpoint_change' object.pk %}">Admin</a>
-            {% endif %}
-            <span>{{ layer_point.layer }}, <date>{{ layer_point.date | default:"Pas de date" }}</date></span>
-            <code>{{ object.json_data.geometry.coordinates }}</code>
-        </p>
+                <code>{{ object.json_data.geometry.coordinates }}</code>
+            </p>
 
-        <dl class="point_content">
-            {% if object.json_data.properties.name %}
-                <dt>name :</dt>
-                <dd>{{ object.json_data.properties.name }}</dd>
-            {% endif %}
-
-            {% if object.json_data.properties.description %}
-                <dt>description :</dt>
-                <dd>{{ object.json_data.properties.description | convert_links }}</dd>
-            {% endif %}
-        </dl>
-
-        <ul class="galerie_picture-list">
-        {% for picture in object.picture_set.all %}
-            <li class="galerie_picture">
-                <a target="_blank" href="{{ picture.file.url }}">
-                    {% thumbnail picture.file "300x300" crop="center" as im %}
-                        <img src="{{ im.url }}">
-                    {% endthumbnail %}
-                    <span class="date">{{ picture.datetime }}</span>
-                </a>
-                {% if user.is_authenticated %}
-                    <a target="_blank" class="admin_link" href="{% url 'admin:galerie_picture_change' picture.uuid %}">Admin</a>
+            <dl class="point_content">
+                {% if object.json_data.properties.name %}
+                    <dt>name :</dt>
+                    <dd>{{ object.json_data.properties.name }}</dd>
                 {% endif %}
-            </li>
-        {% empty %}
-            <li>Pas d’image.</li>
-        {% endfor %}
-        </ul>
+
+                {% if object.json_data.properties.description %}
+                    <dt>description :</dt>
+                    <dd>{{ object.json_data.properties.description | convert_links }}</dd>
+                {% endif %}
+            </dl>
+        </div>
     </section>
+
+    {% if object.picture_set.count > 0 %}
+    <hr>
+
+    <ul class="galerie_picture-list">
+    {% for picture in object.picture_set.all %}
+        <li class="galerie_picture">
+            <a target="_blank" href="{{ picture.file.url }}">
+                {% thumbnail picture.file "300x300" crop="center" as im %}
+                    <img src="{{ im.url }}">
+                {% endthumbnail %}
+                <span class="date">{{ picture.datetime }}</span>
+            </a>
+            {% if user.is_authenticated %}
+                <a target="_blank" class="admin_link" href="{% url 'admin:galerie_picture_change' picture.uuid %}">Admin</a>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
   </div>
 </main>
 {% endblock content %}

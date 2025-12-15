@@ -42,7 +42,15 @@ class LayerPointAdmin(admin.ModelAdmin):
         pl = obj.permalink
         if not pl:
             return None
-        return mark_safe(f"<a href='{pl}' target='_blank' class='button'>Voir →</a>")
+
+        details_url = reverse("galerie:point", args=[obj.pk])
+
+        code = f"""
+            <a href='{pl}' target='_blank' class='button'>Carte →</a><br><br>
+            <a href='{details_url}' target='_blank' class='button'>Point →</a>
+        """
+
+        return mark_safe(code)
 
     def view_on_site(self, obj):
         return obj.permalink
@@ -55,7 +63,6 @@ class PictureAdmin(AdminImageMixin, admin.ModelAdmin):
         "datetime",
         "layer_point_url",
         "upload_date",
-        "path",
         "lien",
     )
     ordering = ("-datetime", "-upload_date")
@@ -65,9 +72,6 @@ class PictureAdmin(AdminImageMixin, admin.ModelAdmin):
         "layer_point",
         "upload_date",
     ]
-
-    def path(self, obj):
-        return obj.file.path
 
     @admin.display(description="Layer point")
     def layer_point_url(self, obj):
@@ -90,9 +94,13 @@ class PictureAdmin(AdminImageMixin, admin.ModelAdmin):
     def lien(self, obj):
         if not obj.layer_point or not obj.layer_point.permalink:
             return ""
+        details_url = reverse("galerie:point", args=[obj.layer_point.pk])
 
         return mark_safe(
-            f"<a href='{obj.layer_point.permalink}' target='_blank' class='button'>Voir →</a>"
+            f"""
+                <a href='{obj.layer_point.permalink}' target='_blank' class='button'>Carte →</a><br><br>
+                <a href='{details_url}' target='_blank' class='button'>Point →</a>
+            """
         )
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):

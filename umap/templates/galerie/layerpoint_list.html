@@ -26,7 +26,7 @@
     <ul class="galerie_layerpoint-list">
     {% for layer_point in object_list %}
         <li>
-            <span class="point_links">
+            <span class="point_thumbmap">
                 <a href="{{ layer_point.permalink }}" class="point_link">
                     <img src="{{ layer_point.get_thumbmap }}" alt="" width="150" />
                 </a>
@@ -50,6 +50,8 @@
                     <span class="description">{{ layer_point.json_data.properties.description | convert_links }}</span>
                 {% endif %}
             </span>
+
+            {% if layer_point.picture_set.count > 0 %}
             <ul class="point_pictures">
                 {% for picture in layer_point.picture_set.all %}
                 <li class="galerie_picture">
@@ -65,9 +67,8 @@
                 </li>
                 {% endfor %}
             </ul>
+            {% endif %}
         </li>
-    {% empty %}
-        <li>No pictures yet.</li>
     {% endfor %}
     </ul>
 

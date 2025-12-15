@@ -12,6 +12,7 @@ from PIL.ExifTags import TAGS
 from sorl.thumbnail import ImageField, get_thumbnail
 
 from umap.models import DataLayer
+from . import utils
 
 import logging
 
@@ -152,8 +153,12 @@ class LayerPoint(models.Model):
         if not self.map:
             return None
         url = reverse("map", args=[self.map.slug, self.map.id])
-        return f"{url}?feature={self.id}"
+        coords = f"16/{self.json_data["geometry"]["coordinates"][1]}/{self.json_data["geometry"]["coordinates"][0]}"
+        return f"{url}?feature={self.id}#{coords}"
 
+    def get_thumbmap(self):
+        thumbmap_url = utils.get_or_generate_thumbmap(self)
+        return thumbmap_url
 
 class Picture(models.Model):
     uuid = models.UUIDField(

@@ -29,6 +29,7 @@
     <p><a href="{% url 'galerie:index' %}">← Retour</a></p>
     <section class="galerie_layerpoint-detail">
         <div>
+            <a href="{{ object.permalink }}" class="point_link"><img src="{{ object.get_thumbmap }}" alt="" /></a>
         </div>
 
         <p class="point_info">

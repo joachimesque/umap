@@ -50,6 +50,7 @@ urlpatterns = [
         can_view_map(views.MapDownload.as_view()),
         name="map_download",
     ),
+    path("galerie/", include("umap.galerie.urls")),
 ]
 
 i18n_urls = [

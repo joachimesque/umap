@@ -1,0 +1,89 @@
+{% extends "umap/content.html" %}
+
+{% load galerie_tags i18n thumbnail %}
+
+{% block header %}
+<header class="wrapper row">
+    <nav class="umap-nav">
+      <section>
+        {% include "umap/branding.html" %}
+      </section>
+      <section>
+        <ul>
+            <li>
+              <a href="{% url 'galerie:orphelines' %}">Orphelines</a>
+            </li>
+        </ul>
+      </section>
+    </nav>
+</header>
+{% endblock header %}
+
+{% block content %}
+<main class="wrapper">
+  <div class="row">
+    <h1>Points</h1>
+    <ul class="galerie_layerpoint-list">
+    {% for layer_point in object_list %}
+        <li>
+            <a href="{{ layer_point.permalink }}" class="point_link">Voir →</a>
+            <span class="point_info">
+                <strong>{{ layer_point.pk }}</strong>
+                {% if user.is_authenticated %}
+                    <a target="_blank" class="admin_link" href="{% url 'admin:galerie_layerpoint_change' layer_point.pk %}">Admin</a>
+                {% endif %}
+                <code>{{ layer_point.json_data.geometry.coordinates }}</code>
+            </span>
+            <span class="point_content">
+                {% if layer_point.json_data.properties.name %}
+                    <span class="name">{{ layer_point.json_data.properties.name }}</span>
+                {% endif %}
+                {% if layer_point.json_data.properties.description %}
+                    <span class="description">{{ layer_point.json_data.properties.description | convert_links }}</span>
+                {% endif %}
+            </span>
+            <ul class="point_pictures">
+                {% for picture in layer_point.picture_set.all %}
+                <li class="galerie_picture">
+                    <a target="_blank" href="{{ picture.file.url }}">
+                        {% thumbnail picture.file "150x150" crop="center" as im %}
+                            <img src="{{ im.url }}">
+                        {% endthumbnail %}
+                        <span class="date">{{ picture.datetime|date:"Y-m-d h:i" }}</span>
+                    </a>
+                    {% if user.is_authenticated %}
+                        <a target="_blank" class="admin_link" href="{% url 'admin:galerie_picture_change' picture.uuid %}">Admin</a>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% empty %}
+        <li>No pictures yet.</li>
+    {% endfor %}
+    </ul>
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% else %}
+            <a href="#" inert>&laquo; first</a>
+            <a href="#" inert>previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next ➼</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last ➽</a>
+        {% else %}
+            <a href="#" inert>next ➼</a>
+            <a href="#" inert>last ➽</a>
+        {% endif %}
+    </div>
+  </div>
+</main>
+{% endblock content %}

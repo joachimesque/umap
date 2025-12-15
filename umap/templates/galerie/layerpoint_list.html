@@ -28,10 +28,14 @@
         <li>
             <a href="{{ layer_point.permalink }}" class="point_link">Voir →</a>
             <span class="point_info">
-                <strong>{{ layer_point.pk }}</strong>
+                <span>
+                    <strong>{{ layer_point.pk }}</strong> <a href="{% url 'galerie:point' pk=layer_point.pk %}" class="point_link">
+                      Détail →</a>
+                </span>
                 {% if user.is_authenticated %}
                     <a target="_blank" class="admin_link" href="{% url 'admin:galerie_layerpoint_change' layer_point.pk %}">Admin</a>
                 {% endif %}
+                <span>{{ layer_point.layer }}, <date>{{ layer_point.date | default:"Pas de date" }}</date></span>
                 <code>{{ layer_point.json_data.geometry.coordinates }}</code>
             </span>
             <span class="point_content">

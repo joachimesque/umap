@@ -126,6 +126,11 @@
         opacity: .6;
     }
 
+    .point_links {
+        display: flex;
+        flex-direction: column;
+    }
+
     .point_pictures {
         display: flex;
         flex-wrap: wrap;

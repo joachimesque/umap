@@ -1,0 +1,74 @@
+{% extends "umap/content.html" %}
+
+{% load galerie_tags i18n thumbnail %}
+
+{% block header %}
+<header class="wrapper row">
+    <nav class="umap-nav">
+      <section>
+        {% include "umap/branding.html" %}
+      </section>
+      <section>
+        <ul>
+            <li>
+              <a href="{% url 'galerie:index' %}">Points</a>
+            </li>
+            <li>
+              <a href="{% url 'galerie:orphelines' %}">Orphelines</a>
+            </li>
+        </ul>
+      </section>
+    </nav>
+</header>
+{% endblock header %}
+
+{% block content %}
+<main class="wrapper">
+  <div class="row">
+    <h1>Point : <mark>{{ object.pk }}</mark></h1>
+    <p><a href="{% url 'galerie:index' %}">← Retour</a></p>
+    <section class="galerie_layerpoint-detail">
+        <div>
+        </div>
+
+        <p class="point_info">
+            {% if user.is_authenticated %}
+                <a target="_blank" class="admin_link" href="{% url 'admin:galerie_layerpoint_change' object.pk %}">Admin</a>
+            {% endif %}
+            <span>{{ layer_point.layer }}, <date>{{ layer_point.date | default:"Pas de date" }}</date></span>
+            <code>{{ object.json_data.geometry.coordinates }}</code>
+        </p>
+
+        <dl class="point_content">
+            {% if object.json_data.properties.name %}
+                <dt>name :</dt>
+                <dd>{{ object.json_data.properties.name }}</dd>
+            {% endif %}
+
+            {% if object.json_data.properties.description %}
+                <dt>description :</dt>
+                <dd>{{ object.json_data.properties.description | convert_links }}</dd>
+            {% endif %}
+        </dl>
+
+        <ul class="galerie_picture-list">
+        {% for picture in object.picture_set.all %}
+            <li class="galerie_picture">
+                <a target="_blank" href="{{ picture.file.url }}">
+                    {% thumbnail picture.file "300x300" crop="center" as im %}
+                        <img src="{{ im.url }}">
+                    {% endthumbnail %}
+                    <span class="date">{{ picture.datetime }}</span>
+                </a>
+                {% if user.is_authenticated %}
+                    <a target="_blank" class="admin_link" href="{% url 'admin:galerie_picture_change' picture.uuid %}">Admin</a>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>Pas d’image.</li>
+        {% endfor %}
+        </ul>
+    </section>
+  </div>
+</main>
+{% endblock content %}

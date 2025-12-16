@@ -156,8 +156,8 @@ class LayerPoint(models.Model):
         coords = f'16/{self.json_data["geometry"]["coordinates"][1]}/{self.json_data["geometry"]["coordinates"][0]}'
         return f"{url}?feature={self.id}#{coords}"
 
-    def get_thumbmap(self):
-        thumbmap_url = utils.get_or_generate_thumbmap(self)
+    def get_thumbmap(self, force=False):
+        thumbmap_url = utils.get_or_generate_thumbmap(self, force)
         return thumbmap_url
 
 

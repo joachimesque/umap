@@ -7,6 +7,7 @@ from django.views.generic.detail import DetailView
 
 from . import models
 
+
 class IndexView(ListView):
     model = models.LayerPoint
     paginate_by = 100
@@ -17,7 +18,9 @@ class OrphanView(ListView):
     model = models.Picture
 
     def get_queryset(self):
-        return models.Picture.objects.filter(layer_point__isnull=True).order_by('-datetime')
+        return models.Picture.objects.filter(layer_point__isnull=True).order_by(
+            "-datetime"
+        )
 
 
 class PointView(DetailView):

@@ -27,7 +27,7 @@
     {% for layer_point in object_list %}
         <li>
             <span class="point_thumbmap">
-                <a href="{{ layer_point.permalink }}" class="point_link">
+                <a href="{{ layer_point.permalink | default:'#' }}" class="point_link">
                     <img src="{{ layer_point.get_thumbmap }}" alt="" width="150" />
                 </a>
             </span>

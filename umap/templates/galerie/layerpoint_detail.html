@@ -34,14 +34,16 @@
         {% endif %}
 
         <div class="point_thumbmap">
-            <a href="{{ object.permalink | default:'#' }}" class="point_link"><img src="{{ object.get_thumbmap }}" alt="" /></a>
+            <a href="{{ object.permalink | default:'#' }}" class="point_link">
+                <img src="{{ object.get_thumbmap }}" alt="" />
+            </a>
         </div>
         
         <div class="point_content">
             <p class="point_info">
                 <span>
-                    {{ layer_point.layer | default:"Pas de calque" }},
-                    <date>{{ layer_point.date | default:"Pas de date" }}</date>
+                    {{ object.layer | default:"Pas de calque" }},
+                    <date>{{ object.date | default:"Pas de date" }}</date>
                 </span><br>
 
                 <code>{{ object.json_data.geometry.coordinates }}</code>

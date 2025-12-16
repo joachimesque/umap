@@ -56,11 +56,14 @@ def get_or_generate_thumbmap(layer_point, force=False):
     if force:
         default_storage.delete(point_path)
 
+    if not layer_point.json_data:
+        return None
+
     context = staticmaps.Context()
     context.set_tile_provider(staticmaps.tile_provider_CartoNoLabels)
     # context.set_tile_provider(TILES)
 
-    point_type = layer_point.json_data["properties"].get("type", None) if layer_point.json_data else None
+    point_type = layer_point.json_data["properties"].get("type", None)
     color = get_color(
         point_type,
         str(layer_point.layer.pk) if layer_point.layer else None

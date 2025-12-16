@@ -1,5 +1,6 @@
 import os
 import re
+from io import StringIO
 
 import staticmaps
 
@@ -47,10 +48,13 @@ OLD_MARKER = r'(<g clip-path=\"url\(#page\)\" transform=\"translate\([\d\.\-]+, 
 def get_or_generate_thumbmap(layer_point, force=False):
     point_filename = f"{layer_point.pk}.svg"
     point_path = os.path.join(THUMBMAPS_DIR, point_filename)
-    point_url = f"{settings.MEDIA_URL}{THUMBMAPS_DIR}/{point_filename}"
+    point_url = default_storage.url(point_path)
     
-    # if default_storage.exists(point_path) and not force:
-    #     return point_url
+    if default_storage.exists(point_path) and not force:
+        return point_url
+
+    if force:
+        default_storage.delete(point_path)
 
     context = staticmaps.Context()
     context.set_tile_provider(staticmaps.tile_provider_CartoNoLabels)
@@ -69,11 +73,10 @@ def get_or_generate_thumbmap(layer_point, force=False):
     pt = staticmaps.create_latlng(float(coords[1]), float(coords[0]))
     context.add_object(staticmaps.Marker(pt, size=16))
 
-    file = default_storage.open(point_path, mode="w")
     image = context.render_svg(200, 200)
     image_string = image.tostring()
     image_string = re.sub(OLD_MARKER, new_marker, image_string)
-    file.write(image_string)
-    file.close()
+    image = StringIO(image_string)
+    default_storage.save(point_path, image)
 
     return point_url

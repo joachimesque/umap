@@ -173,6 +173,9 @@ class Picture(models.Model):
     )
     comments = models.TextField(blank=True, default="")
 
+    class Meta:
+        ordering = ["-datetime", "-upload_date"]
+
 
 @receiver(post_save, sender=Picture)
 def extract_exif_date(sender, instance, created, **kwargs):

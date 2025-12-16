@@ -23,19 +23,15 @@ THUMBMAPS_DIR = "thumbmap"
 
 def apply_rules(layer_point, default, ruleset):
     if ruleset == "map":
-        settings = layer_point.map.settings
+        rules = layer_point.map.settings["properties"].get("rules", [])
     if ruleset == "layer":
-        settings = layer_point.layer.settings
+        rules = layer_point.layer.settings.get("rules", [])
 
-    if "rules" in settings:
-        for rule in settings["rules"]:
-            if "color" in rule["properties"]:
-                cond_key, cond_value = rule["condition"].split("=")
-                if (
-                    layer_point.json_data["properties"].get(cond_key, None)
-                    == cond_value
-                ):
-                    return rule["properties"]["color"]
+    for rule in rules:
+        if "color" in rule["properties"]:
+            cond_key, cond_value = rule["condition"].split("=")
+            if layer_point.json_data["properties"].get(cond_key, None) == cond_value:
+                return rule["properties"]["color"]
 
     return default
 

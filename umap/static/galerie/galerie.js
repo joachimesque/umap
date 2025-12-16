@@ -4,7 +4,8 @@ export const getGalerie = (point_id) => {
 
   if (!point) return ""
 
-  const point_admin_link = point["point_admin_url"] ? `<a href="${point["point_admin_url"]}" target="_blank" class="full_line">Point admin</a>` : ''
+  const point_admin_link = point["point_admin_url"] ? `<a href="${point["point_admin_url"]}" target="_blank">🖊️ Admin</a>` : ''
+  const point_detail_link = `<a href="${point["point_detail_url"]}" target="_blank">🔎 Détails</a>`
 
   const pictures = point["pictures"].map(p => {
     let code = `<div><a href="${p[0]}" target="_blank"><img src="${p[1]}" alt="" /></a>`
@@ -17,5 +18,5 @@ export const getGalerie = (point_id) => {
     return code
   })
 
-  return `<div class="content-galerie">${point_admin_link}${pictures.join("")}</div>`
+  return `<div class="content-galerie"><div class="full_line">${point_admin_link}${point_detail_link}</div>${pictures.join("")}</div>`
 }

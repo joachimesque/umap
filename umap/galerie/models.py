@@ -122,6 +122,7 @@ def get_map_points_json(map_pk, user_can_edit):
                 if user_can_edit
                 else None
             ),
+            "point_detail_url": (reverse("galerie:point", args=[str(point.id)])),
         }
 
     return json.dumps(output)

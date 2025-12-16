@@ -10,8 +10,12 @@
     }
 
     div {
-        flex: 0 0 auto;
         display: flex;
+        justify-content: space-around;        
+    }
+
+    div:has(img) {
+        flex: 0 0 auto;
         flex-direction: column;
         align-items: center;
     }

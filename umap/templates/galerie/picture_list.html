@@ -26,14 +26,14 @@
     <ul class="galerie_picture-list">
     {% for picture in object_list %}
         <li class="galerie_picture">
-            <a target="_blank" href="{{ picture.file.url }}">
+            <a href="{{ picture.file.url }}">
                 {% thumbnail picture.file "300x300" crop="center" as im %}
                     <img src="{{ im.url }}">
                 {% endthumbnail %}
                 <span class="date">{{ picture.datetime }}</span>
             </a>
             {% if user.is_authenticated %}
-                <a target="_blank" class="admin_link" href="{% url 'admin:galerie_picture_change' picture.uuid %}">Admin</a>
+                <a class="admin_link" href="{% url 'admin:galerie_picture_change' picture.uuid %}">Admin</a>
             {% endif %}
         </li>
     {% empty %}

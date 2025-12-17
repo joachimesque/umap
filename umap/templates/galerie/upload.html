@@ -1,0 +1,41 @@
+{% extends "umap/content.html" %}
+
+{% load galerie_tags i18n thumbnail %}
+
+{% block header %}
+<header class="wrapper row">
+    <nav class="umap-nav">
+      <section>
+        {% include "umap/branding.html" %}
+      </section>
+      <section>
+        <ul>
+            <li>
+              <a href="{% url 'galerie:index' %}">Points</a>
+            </li>
+            <li>
+              <a href="{% url 'galerie:orphelines' %}">Orphelines</a>
+            </li>
+        </ul>
+      </section>
+    </nav>
+</header>
+{% endblock header %}
+
+{% block content %}
+<main class="wrapper">
+  <div class="row">
+    <div class="col quarter mwide center">
+      <p><a href="{% url 'galerie:index' %}">← Retour</a></p>
+      <h1>Upload de photos</h1>
+      <section class="galerie_picture-upload">
+          <form method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              {{ form }}
+              <input type="submit" value="Enregistrer">
+          </form>
+      </section>
+    </div>
+  </div>
+</main>
+{% endblock content %}

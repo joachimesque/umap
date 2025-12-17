@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 
 # Create your views here.
 
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 
-from . import models
+from . import models, forms
 
 
 class IndexView(ListView):
@@ -25,3 +25,24 @@ class OrphanView(ListView):
 
 class PointView(DetailView):
     model = models.LayerPoint
+
+
+# Create your views here.
+def fileupload(request):
+    form = forms.PicturesForm(request.POST, request.FILES)
+    if request.method == "GET":
+        point_pk = request.GET.get("point", None)
+        point = models.LayerPoint.objects.get(pk=point_pk) if point_pk else None
+        form = forms.PicturesForm(initial={"layer_point": point})
+
+    if request.method == "POST":
+        images = request.FILES.getlist("files")
+        layer_point = request.POST["layer_point"]
+        layer_point = models.LayerPoint.objects.get(pk=layer_point)
+        for image in images:
+            image_ins = models.Picture(file=image, layer_point=layer_point)
+            image_ins.save()
+        return redirect(reverse("galerie:point", args=[layer_point.pk]))
+
+    context = {"form": form}
+    return render(request, "galerie/upload.html", context)

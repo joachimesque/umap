@@ -22,7 +22,7 @@
 {% block content %}
 <main class="wrapper">
     <div class="row">
-        <h1>Points <small>({{ object_list.total_count }})</small></h1>
+        <h1>Points <small>({{ page_obj.paginator.count }})</small></h1>
         <details class="galerie_layerpoint-filters" {% if request.GET.date or request.GET.type %}open{% endif %}>
             <summary>Filtres</summary>
             <div>

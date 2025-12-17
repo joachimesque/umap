@@ -22,7 +22,7 @@
 {% block content %}
 <main class="wrapper">
   <div class="row">
-    <h1>Orphelines</h1>
+    <h1>Orphelines <small>({{ object_list.count }})</small></h1>
     <ul class="galerie_picture-list">
     {% for picture in object_list %}
         <li class="galerie_picture">
@@ -37,7 +37,7 @@
             {% endif %}
         </li>
     {% empty %}
-        <li>No pictures yet.</li>
+        <li>No pictures.</li>
     {% endfor %}
     </ul>
   </div>

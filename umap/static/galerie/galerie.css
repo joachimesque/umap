@@ -123,6 +123,7 @@
 
         span {
             white-space: pre-wrap;
+            word-break: break-all;
         }
     }
 
@@ -171,6 +172,15 @@
     [inert] {
         opacity: .4;
         text-decoration: none;
+    }
+
+    @media (width < 770px) {
+        flex-wrap: wrap;
+        .current {
+            flex-basis: 100%;
+            text-align: center;
+            padding-block: 0;
+        }
     }
 }
 

@@ -1,7 +1,6 @@
+import datetime
+
 from django.shortcuts import render, redirect, reverse
-
-# Create your views here.
-
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 
@@ -11,7 +10,18 @@ from . import models, forms
 class IndexView(ListView):
     model = models.LayerPoint
     paginate_by = 100
-    ordering = "-date"
+    ordering = ["-date", 'pk']
+
+    def get_queryset(self):
+        queryset = models.LayerPoint.objects.all().order_by('-date', 'pk')
+        if "type" in self.request.GET:
+            queryset = queryset.filter(type=self.request.GET["type"])
+        if "date" in self.request.GET and self.request.GET["date"]:
+            date = self.request.GET["date"]
+            date = datetime.datetime.strptime(date, "%Y-%m-%d")
+            date_plusone = date + datetime.timedelta(days=1)
+            queryset = queryset.filter(date__gte=date, date__lt=date_plusone)
+        return queryset
 
 
 class OrphanView(ListView):

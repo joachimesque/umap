@@ -106,7 +106,7 @@ def get_map_points_json(map_pk, user_can_edit):
                     "95x95",
                     crop="center",
                 ).url,
-                datetime.strftime(picture.datetime, "%d %b %Y"),
+                datetime.strftime(picture.datetime, "%d %b %Y") if picture.datetime else "",
                 (
                     reverse("admin:galerie_picture_change", args=[str(picture.uuid)])
                     if user_can_edit

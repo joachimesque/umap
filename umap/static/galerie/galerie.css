@@ -196,6 +196,58 @@
     }
 }
 
+.galerie_layerpoint-filters {
+    margin-bottom: 2rem;
+
+    &[open] {
+        border-inline-start: 2px solid currentColor;
+    }
+
+    summary {
+        background-color: transparent;
+
+        & + div {
+            max-width: max(300px, 50vw);
+            display: flex;
+            flex-direction: column;
+            padding: 1em;
+            gap: 1em;
+        }
+    }
+
+    ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    a::first-letter {
+        color: var(--text-color);
+    }
+
+    a[aria-current] {
+        font-weight: bold;
+    }
+
+    a[inert] {
+        opacity: 0;
+    }
+
+    #date_filter:not(.filled) + #date_filter_reset {
+        display: none;
+    }
+
+    form {
+        display: flex;
+
+        input[type="date"] {
+            flex: 0 1 auto;
+        }
+        button {
+            flex: 0 0 auto;
+        }
+    }
+}
 
 .pagination {
     display: flex;

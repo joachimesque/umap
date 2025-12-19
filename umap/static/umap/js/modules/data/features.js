@@ -182,6 +182,14 @@ class Feature {
     }`
   }
 
+  getAdminLink() {
+    return Utils.getAdminUrl(this.id)
+  }
+
+  getGalerieLink() {
+    return Utils.getGalerieUrl(this.id)
+  }
+
   view({ latlng } = {}) {
     const outlink = this.getOption('outlink')
     const target = this.getOption('outlinkTarget')
@@ -626,25 +634,41 @@ class Feature {
 
   getContextMenu(event) {
     const permalink = this.getPermalink()
+    const adminlink = this.getAdminLink()
+    const galerielink = this.getGalerieLink()
     const items = []
     if (this._umap.editEnabled && !this.isReadOnly()) {
       items.push({
         items: this.getEditContextMenu(event),
       })
     }
-    if (permalink) {
+    if (this._umap.hasEditMode()) {
       items.push({
-        label: translate('Permalink'),
+        label: '🖊️ Admin',
         action: () => {
           window.open(permalink)
         },
       })
+    }
+    items.push({
+      label: '🔎 Détails',
+      action: () => {
+        window.open(galerielink)
+      },
+    })
+    if (permalink) {
       items.push({
-        label: translate('Layer permalink'),
+        label: '🔗 Permalien',
         action: () => {
-          window.open(this.datalayer.getPermalink())
+          window.open(permalink)
         },
       })
+      // items.push({
+      //   label: translate('Layer permalink'),
+      //   action: () => {
+      //     window.open(this.datalayer.getPermalink())
+      //   },
+      // })
     }
     items.push({
       label: translate('Copy as GeoJSON'),

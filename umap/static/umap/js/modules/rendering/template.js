@@ -39,6 +39,7 @@ class PopupTemplate {
     const template = feature.getOption('popupContentTemplate')
     const target = feature.getOption('outlinkTarget')
     const properties = feature.extendedProperties()
+    const galerieLinks = Galerie.getGalerieLinks(feature.id)
     const galerie = Galerie.getGalerie(feature.id)
     // Resolve properties inside description
     properties.description = Utils.greedyTemplate(
@@ -48,7 +49,7 @@ class PopupTemplate {
     properties.name = properties.name ?? feature.getDisplayName()
     let content = Utils.greedyTemplate(template, properties)
     content = Utils.toHTML(content, { target: target })
-    return Utils.loadTemplate(`<div class="umap-popup-container text">${content}${galerie}</div>`)
+    return Utils.loadTemplate(`<div class="umap-popup-container text">${galerieLinks}${content}${galerie}</div>`)
   }
 
   renderFooter(feature) {

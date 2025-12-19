@@ -346,6 +346,14 @@ export function getBaseUrl() {
   return `//${window.location.host}${window.location.pathname}`
 }
 
+export function getAdminUrl(point_id) {
+  return `//${window.location.host}/admin/galerie/layerpoint/${point_id}/change/`
+}
+
+export function getGalerieUrl(point_id) {
+  return `//${window.location.host}/galerie/point/${point_id}`
+}
+
 export function hasVar(value) {
   return typeof value === 'string' && value.indexOf('{') !== -1
 }

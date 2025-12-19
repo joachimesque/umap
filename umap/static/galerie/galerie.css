@@ -1,3 +1,21 @@
+.showcase-map {
+    .card {
+        gap: 1ex;
+        position: relative;
+    }
+
+    a.main {
+        font-size: 1.4em;
+        text-align: center;
+    }
+
+    a.main::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+    }
+}
+
 .content-galerie {
     padding-block-start: 10px;
     border-block-start: 1px solid var(--color-veryLightGray);

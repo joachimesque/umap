@@ -169,7 +169,7 @@ class Home(PaginatorMixin, TemplateView, PublicMapsMixin):
         showcase_map = None
         if hasattr(settings, "UMAP_SHOWCASE_PK"):
             try:
-                showcase_map = Map.public.get(pk=settings.UMAP_SHOWCASE_PK)
+                showcase_map = Map.objects.get(pk=settings.UMAP_SHOWCASE_PK)
             except Map.DoesNotExist:
                 pass
 

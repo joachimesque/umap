@@ -11,6 +11,7 @@ from sorl.thumbnail import get_thumbnail
 class PictureInline(AdminImageMixin, admin.TabularInline):
     model = Picture
     extra = 1
+    fields = ["file"]
     pass
 
 
@@ -28,6 +29,12 @@ class LayerPointAdmin(admin.ModelAdmin):
     inlines = [
         PictureInline,
     ]
+
+    def save_model(self, request, obj, form, change):
+        obj.save()
+
+        for afile in request.FILES.getlist('photos_multiple'):
+            obj.picture_set.create(file=afile)
 
     def map_id(self, obj):
         return f"{obj.layer.map} ({obj.layer.map.pk})" if obj.layer is not None else ""

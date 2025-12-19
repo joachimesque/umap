@@ -56,3 +56,9 @@ def fileupload(request):
 
     context = {"form": form}
     return render(request, "galerie/upload.html", context)
+
+
+def force_reload_image(request, pk):
+    models.LayerPoint.objects.get(pk=pk).get_thumbmap(force=True)
+
+    return redirect(reverse("galerie:point", args=[pk]))

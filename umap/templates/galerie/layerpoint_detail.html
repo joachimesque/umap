@@ -30,12 +30,15 @@
         <h1>Point : <mark>{{ object.pk }}</mark></h1>
 
         {% if user.is_authenticated %}
-            <a class="admin_link" href="{% url 'admin:galerie_layerpoint_change' object.pk %}">Admin</a>
+            <div class="admin_link">
+                <a class="button" href="{% url 'admin:galerie_layerpoint_change' object.pk %}">Admin</a>
+                <a href="{% url 'galerie:force_thumbmap' object.pk %}">Recharcher l’image</a>
+            </div>
         {% endif %}
 
         <div class="point_thumbmap">
             <a href="{{ object.permalink | default:'#' }}" class="point_link">
-                <img src="{{ object.get_thumbmap }}" alt="" />
+                <img src="{{ object.get_thumbmap }}?{% random_number 5 %}" alt="" />
             </a>
         </div>
         
@@ -70,7 +73,7 @@
         <li class="galerie_picture">
             <a href="{{ picture.file.url }}">
                 {% thumbnail picture.file "300x300" crop="center" as im %}
-                    <img src="{{ im.url }}">
+                    <img src="{{ im.url }}" alt="">
                 {% endthumbnail %}
                 <span class="date">{{ picture.datetime }}</span>
             </a>

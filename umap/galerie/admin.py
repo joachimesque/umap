@@ -53,8 +53,8 @@ class LayerPointAdmin(admin.ModelAdmin):
         details_url = reverse("galerie:point", args=[obj.pk])
 
         code = f"""
-            <a href='{pl}' target='_blank' class='button'>Carte →</a><br><br>
-            <a href='{details_url}' target='_blank' class='button'>Point →</a>
+            <a href='{pl}' class='button'>Carte →</a><br><br>
+            <a href='{details_url}' class='button'>Point →</a>
         """
 
         return mark_safe(code)
@@ -105,8 +105,8 @@ class PictureAdmin(AdminImageMixin, admin.ModelAdmin):
 
         return mark_safe(
             f"""
-                <a href='{obj.layer_point.permalink}' target='_blank' class='button'>Carte →</a><br><br>
-                <a href='{details_url}' target='_blank' class='button'>Point →</a>
+                <a href='{obj.layer_point.permalink}' class='button'>Carte →</a><br><br>
+                <a href='{details_url}' class='button'>Point →</a>
             """
         )
 

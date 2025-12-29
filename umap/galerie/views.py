@@ -1,5 +1,6 @@
 import datetime
 
+from django.db.models import F, Max
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -10,10 +11,17 @@ from . import models, forms
 class IndexView(ListView):
     model = models.LayerPoint
     paginate_by = 100
-    ordering = ["-date", 'pk']
 
     def get_queryset(self):
-        queryset = models.LayerPoint.objects.all().order_by('-date', 'pk')
+        queryset = (
+            models.LayerPoint.objects.annotate(last_picture=Max("picture__datetime"))
+            .order_by(
+                F("date").desc(nulls_last=True),
+                F("last_picture").desc(nulls_last=True),
+                "pk",
+            )
+            .distinct()
+        )
         if "type" in self.request.GET:
             queryset = queryset.filter(type=self.request.GET["type"])
         if "date" in self.request.GET and self.request.GET["date"]:
@@ -29,7 +37,7 @@ class OrphanView(ListView):
 
     def get_queryset(self):
         return models.Picture.objects.filter(layer_point__isnull=True).order_by(
-            "-datetime"
+            F("datetime").desc(nulls_last=True)
         )
 
 

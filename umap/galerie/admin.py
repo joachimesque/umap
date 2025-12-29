@@ -33,7 +33,7 @@ class LayerPointAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.save()
 
-        for afile in request.FILES.getlist('photos_multiple'):
+        for afile in request.FILES.getlist("photos_multiple"):
             obj.picture_set.create(file=afile)
 
     def map_id(self, obj):

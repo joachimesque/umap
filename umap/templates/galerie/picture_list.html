@@ -30,7 +30,7 @@
         <li class="galerie_picture">
             <a href="{{ picture.file.url }}">
                 {% thumbnail picture.file "300x300" crop="center" as im %}
-                    <img src="{{ im.url }}">
+                    <img src="{{ im.url }}" alt="">
                 {% endthumbnail %}
                 <span class="date">{{ picture.datetime }}</span>
             </a>

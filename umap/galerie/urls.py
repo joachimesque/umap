@@ -11,4 +11,5 @@ urlpatterns = [
         "point/<str:pk>/force_thumbmap", views.force_reload_image, name="force_thumbmap"
     ),
     path("upload", views.fileupload, name="upload_files"),
+    path("upload_form", views.fileupload_form, name="upload_form"),
 ]

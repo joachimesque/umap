@@ -4,7 +4,7 @@ import { Request } from '../request.js'
 import * as Utils from '../utils.js'
 import * as DOMUtils from '../domutils.js'
 import * as Icon from './icon.js'
-import * as Galerie from '../../../../galerie/galerie.js'
+import * as GalerieUtils from '../../../../galerie/galerie_utils.js'
 
 export default async function loadTemplate(name, feature, container) {
   let klass = PopupTemplate
@@ -39,8 +39,8 @@ class PopupTemplate {
     const template = feature.getOption('popupContentTemplate')
     const target = feature.getOption('outlinkTarget')
     const properties = feature.extendedProperties()
-    const galerieLinks = Galerie.getGalerieLinks(feature.id)
-    const galerie = Galerie.getGalerie(feature.id)
+    const galerieLinks = GalerieUtils.getGalerieLinks(feature.id)
+    const galerie = GalerieUtils.getGalerie(feature.id)
     // Resolve properties inside description
     properties.description = Utils.greedyTemplate(
       feature.properties.description || '',

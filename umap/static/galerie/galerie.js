@@ -1,31 +1,92 @@
-import * as Utils from '../umap/js/modules/utils.js'
+const handleUploadDialog = (linkEl) => {
+    let uploadDialogEl = document.getElementById("uploadDialog");
 
-export const getGalerieLinks = (point_id) => {
-  const can_edit = JSON.parse(document.getElementById("map-settings").dataset.settings)["properties"]["editMode"] != "disabled"
+    if (!uploadDialogEl) {
+        uploadDialogEl = document.createElement("dialog");
+        const dialogDivEl = document.createElement("div");
+        const dialogFormEl = document.createElement("form");
+        const dialogButtonEl = document.createElement("button");
 
-  const point_admin_link = can_edit ? `<a href="${Utils.getAdminUrl(point_id)}" target="_blank">🖊️ Admin</a>` : ""
-  const point_detail_link = `<a href="${Utils.getGalerieUrl(point_id)}" target="_blank">🔎 Détails</a>`
+        uploadDialogEl.id = "uploadDialog";
 
-  return `<div class="content-galerie_links">${point_admin_link}${point_detail_link}</div>`
-}
-export const getGalerie = (point_id) => {
-  const settings = JSON.parse(document.getElementById("galerie-settings").dataset.settings)
-  const point = settings[point_id]
+        dialogDivEl.classList.add("form_holder");
+        dialogFormEl.setAttribute("method", "dialog");
+        dialogButtonEl.textContent = "Fermer";
 
-  if (!point) return ""
+        dialogFormEl.append(dialogButtonEl);
 
-  if (point["pictures"].length < 1) return ""
+        uploadDialogEl.append(dialogFormEl);
+        uploadDialogEl.append(dialogDivEl);
 
-  const pictures = point["pictures"].map(p => {
-    let code = `<div><a href="${p[0]}" target="_blank"><img src="${p[1]}" alt="" /></a>`
-    if (!!p[3]) {
-      code += `<a href="${p[3]}" target="_blank">${p[2]}</a>`
-    } else {
-      code += `<a href="${p[0]}" target="_blank">${p[2]}</a>`
+        document.body.append(uploadDialogEl);
     }
-    code += "</div>"
-    return code
-  })
 
-  return `<div class="content-galerie">${pictures.join("")}</div>`
+    uploadDialogEl.showModal();
+
+    let formAction = linkEl.href;
+
+    if (linkEl.hasAttribute("data-dialog-upload-back")) {
+        formAction += `&back=${linkEl.dataset.dialogUploadBack}`
+    }
+
+    window
+        .fetch(`/galerie/upload_form?point=${linkEl.dataset.dialogUpload}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            return response.text();
+          })
+        .then(content => {
+            uploadDialogEl.querySelector(".form_holder").innerHTML = content;
+            uploadDialogEl.querySelector("form[method='POST']").setAttribute("action", formAction);
+
+        })
+
+    
 }
+
+const handleLightbox = (imgEl) => {
+    const container = imgEl.closest(".galerie_picture, .content-galerie");
+    if (!container) return;
+
+    let lightboxDialogEl = document.getElementById("lightbox");
+
+    if (!lightboxDialogEl) {
+        lightboxDialogEl = document.createElement("dialog");
+        const dialogDivEl = document.createElement("div");
+        const dialogFormEl = document.createElement("form");
+        const dialogButtonEl = document.createElement("button");
+
+        lightboxDialogEl.id = "lightbox";
+
+        dialogDivEl.classList.add("img_holder");
+        dialogFormEl.setAttribute("method", "dialog");
+        dialogButtonEl.textContent = "Fermer";
+
+        dialogFormEl.append(dialogButtonEl);
+
+        lightboxDialogEl.append(dialogFormEl);
+        lightboxDialogEl.append(dialogDivEl);
+
+        document.body.append(lightboxDialogEl);
+    }
+
+    lightboxDialogEl.showModal();
+    lightboxDialogEl.querySelector(".img_holder").innerHTML = `<img src="${imgEl.parentElement.href}" alt="">`;
+}
+
+document.addEventListener("click", (e) => {
+    if (!!e.metaKey || !!e.ctrlKey) return;
+
+    if (e.target.nodeName == "A" && e.target.hasAttribute("data-dialog-upload")) {
+        e.preventDefault();
+        handleUploadDialog(e.target);
+    }
+
+    if (e.target.nodeName == "IMG" && e.target.hasAttribute("data-lightbox")) {
+        e.preventDefault();
+        handleLightbox(e.target);
+    }
+});

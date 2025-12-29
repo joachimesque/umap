@@ -34,7 +34,7 @@
         {% if user.is_authenticated %}
             <div class="admin_link">
                 <a class="button" href="{% url 'admin:galerie_layerpoint_change' object.pk %}">Admin</a>
-                <a href="{% url 'galerie:force_thumbmap' object.pk %}">Recharcher l’image</a>
+                <a href="{% url 'galerie:force_thumbmap' object.pk %}">Recharger l’image</a>
             </div>
         {% endif %}
 
@@ -75,9 +75,9 @@
         <li class="galerie_picture">
             <a href="{{ picture.file.url }}">
                 {% thumbnail picture.file "300x300" crop="center" as im %}
-                    <img src="{{ im.url }}" alt="">
+                    <img src="{{ im.url }}" alt="" data-lightbox>
                 {% endthumbnail %}
-                <span class="date">{{ picture.datetime }}</span>
+                <span class="date">{{ picture.datetime|default:" " }}</span>
             </a>
             {% if user.is_authenticated %}
                 <a class="admin_link" href="{% url 'admin:galerie_picture_change' picture.uuid %}">Admin</a>
@@ -87,8 +87,8 @@
 
     {% if user.is_authenticated %}
         <li class="galerie_picture_upload">
-            <a href="{% url 'galerie:upload_files' %}?point={{ object.pk }}">
-                <i class="icon icon-24 icon-upload" aria-hidden="true"></i>
+            <a href="{% url 'galerie:upload_files' %}?point={{ object.pk }}" data-dialog-upload="{{ object.pk }}">
+                <i class="icon icon-24 icon-upload" aria-hidden="true" inert></i>
                 Ajouter des images
             </a>
         </li>

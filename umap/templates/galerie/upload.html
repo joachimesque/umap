@@ -31,11 +31,7 @@
       <p><a href="{% url 'galerie:index' %}">← Retour</a></p>
       <h1>Upload de photos</h1>
       <section class="galerie_picture-upload">
-          <form method="POST" enctype="multipart/form-data">
-              {% csrf_token %}
-              {{ form }}
-              <input type="submit" value="Enregistrer">
-          </form>
+          {% include "galerie/components/upload_form.html" %}
       </section>
     </div>
   </div>

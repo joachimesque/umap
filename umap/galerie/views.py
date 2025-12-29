@@ -71,14 +71,30 @@ def fileupload(request):
     if request.method == "POST":
         images = request.FILES.getlist("files")
         layer_point = request.POST["layer_point"]
+        back = request.GET.get("back", None)
         layer_point = models.LayerPoint.objects.get(pk=layer_point)
         for image in images:
             image_ins = models.Picture(file=image, layer_point=layer_point)
             image_ins.save()
+
+        if back == "map":
+            return redirect(layer_point.permalink)
+
         return redirect(reverse("galerie:point", args=[layer_point.pk]))
 
     context = {"form": form}
     return render(request, "galerie/upload.html", context)
+
+
+# Create your views here.
+def fileupload_form(request):
+    if request.method == "GET":
+        point_pk = request.GET.get("point", None)
+        point = models.LayerPoint.objects.get(pk=point_pk) if point_pk else None
+        form = forms.PicturesForm(initial={"layer_point": point})
+
+    context = {"form": form}
+    return render(request, "galerie/components/upload_form.html", context)
 
 
 def force_reload_image(request, pk):

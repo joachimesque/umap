@@ -2,6 +2,8 @@
 
 {% load umap_tags i18n thumbnail %}
 
+{% block head_title %}Orphelines ({{ object_list.count }}) - {{ SITE_DESCRIPTION }}{% endblock head_title %}
+
 {% block header %}
 <header class="wrapper row">
     <nav class="umap-nav">

@@ -2,6 +2,8 @@
 
 {% load galerie_tags i18n thumbnail %}
 
+{% block head_title %}Point : {{ object.pk }} - {{ SITE_DESCRIPTION }}{% endblock head_title %}
+
 {% block header %}
 <header class="wrapper row">
     <nav class="umap-nav">

@@ -25,25 +25,27 @@
 <main class="wrapper">
     <div class="row">
         <h1>Points <small>({{ page_obj.paginator.count }})</small></h1>
+        
         <details class="galerie_layerpoint-filters" {% if request.GET.date or request.GET.type %}open{% endif %}>
             <summary>Filtres</summary>
             <div>
                 <ul>
-                    <li><a {% if request.GET.type == 'peinture' %}aria-current="page"{% endif %} href="?{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}type=peinture">
+                    <li><a {% if request.GET.type == 'peinture' %}aria-current="page"{% endif %} href="?{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}type=peinture">
                         🎨 peinture
                     </a></li>
-                    <li><a {% if request.GET.type == 'dessin' %}aria-current="page"{% endif %} href="?{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}type=dessin">
+                    <li><a {% if request.GET.type == 'dessin' %}aria-current="page"{% endif %} href="?{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}type=dessin">
                         ✏️ dessin
                     </a></li>
-                    <li><a {% if request.GET.type == 'autre' %}aria-current="page"{% endif %} href="?{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}type=autre">
+                    <li><a {% if request.GET.type == 'autre' %}aria-current="page"{% endif %} href="?{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}type=autre">
                         ● autre
                     </a></li>
-                    <li><a {% if not request.GET.type %}inert{% else %}href="?{% if request.GET.date %}date={{ request.GET.date }}{% endif %}"{% endif %}>
+                    <li><a {% if not request.GET.type %}inert{% else %}href="?{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}{% endif %}"{% endif %}>
                         ✖️ Retirer le filtre
                     </a></li>
                 </ul>
                 <form method="GET">
                     {% if request.GET.type %}<input type="hidden" name="type" value="{{ request.GET.type }}">{% endif %}
+                    {% if request.GET.sort %}<input type="hidden" name="sort" value="{{ request.GET.sort }}">{% endif %}
                     <input id="date_filter" type="date" name="date" {% if request.GET.date %}class="filled" value="{{ request.GET.date }}"{% endif %}>
                     <button id="date_filter_reset" type="button" class="button icon">✖️</button>
                     <input type="submit" value="Appliquer">
@@ -63,6 +65,16 @@
                 </script>
             </div>
         </details>
+
+        <div class="galerie_layerpoint-sort">
+            <strong>Ordre</strong>
+            <ul>
+                <li><a {% if not request.GET.sort %}aria-current="page"{% endif %} href="?{% if request.GET.type %}type={{ request.GET.type }}{% endif %}{% if request.GET.date %}date={{ request.GET.date }}{% endif %}">Par date du point</a></li>
+                <li><a {% if request.GET.sort == 'latest_photos' %}aria-current="page"{% endif %} href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}sort=latest_photos">Par photo la plus récente</a></li>
+                <li><a {% if request.GET.sort == 'latest_uploads' %}aria-current="page"{% endif %} href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}sort=latest_uploads">Par ajout de photo le plus récent</a></li>
+            </ul>
+        </div>
+
 
         <ul class="galerie_layerpoint-list">
         {% for layer_point in object_list %}
@@ -121,8 +133,8 @@
 
         <div class="pagination">
             {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                <a href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}page=1">&laquo; first</a>
+                <a href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}page={{ page_obj.previous_page_number }}">previous</a>
             {% else %}
                 <a href="#" inert>&laquo; first</a>
                 <a href="#" inert>previous</a>
@@ -133,8 +145,8 @@
             </span>
 
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">next ➼</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">last ➽</a>
+                <a href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}page={{ page_obj.next_page_number }}">next ➼</a>
+                <a href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}page={{ page_obj.paginator.num_pages }}">last ➽</a>
             {% else %}
                 <a href="#" inert>next ➼</a>
                 <a href="#" inert>last ➽</a>

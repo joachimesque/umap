@@ -202,6 +202,23 @@
     }
 }
 
+.galerie_layerpoint-sort {
+    margin-bottom: 3rem;
+    display: flex;
+    flex-wrap: wrap;
+
+    ul {
+        display: inline-flex;
+        flex-grow: 1;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    a[aria-current] {
+        font-weight: bold;
+    }
+}
+
 .galerie_layerpoint-filters {
     margin-bottom: 2rem;
 
@@ -211,6 +228,8 @@
 
     summary {
         background-color: transparent;
+        font-weight: bold;
+        font-size: inherit;
 
         & + div {
             max-width: max(300px, 50vw);

@@ -158,7 +158,11 @@ class LayerPoint(models.Model):
         return f"{url}?feature={self.id}#{coords}"
 
     def get_thumbmap(self, force=False):
-        thumbmap_url = utils.get_or_generate_thumbmap(self, force)
+        thumbmap_url = ""
+        try:
+            thumbmap_url = utils.get_or_generate_thumbmap(self, force)
+        except AttributeError:
+            pass
         return thumbmap_url
 
 

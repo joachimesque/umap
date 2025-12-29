@@ -1,10 +1,10 @@
 const pictureEls = document.querySelectorAll(".galerie_picture a:has(img)");
 document.addEventListener("click", (e) => {
     if (!!e.metaKey || !!e.ctrlKey) return;
-    if (e.originalTarget.nodeName != "IMG") return;
-    if (e.originalTarget.parentElement.nodeName != "A") return;
+    if (e.target.nodeName != "IMG") return;
+    if (e.target.parentElement.nodeName != "A") return;
 
-    const container = e.originalTarget.closest(".galerie_picture, .content-galerie");
+    const container = e.target.closest(".galerie_picture, .content-galerie");
     if (!container) return;
 
     e.preventDefault();
@@ -32,5 +32,5 @@ document.addEventListener("click", (e) => {
     }
 
     dialogEl.showModal();
-    dialogEl.querySelector(".img_holder").innerHTML = `<img src="${e.originalTarget.parentElement.href}" alt="">`;
+    dialogEl.querySelector(".img_holder").innerHTML = `<img src="${e.target.parentElement.href}" alt="">`;
 });

@@ -5,7 +5,7 @@ export const getGalerieLinks = (point_id) => {
 
   const point_admin_link = can_edit ? `<a href="${Utils.getAdminUrl(point_id)}" target="_blank">🖊️ Admin</a>` : ""
   const point_detail_link = `<a href="${Utils.getGalerieUrl(point_id)}" target="_blank">🔎 Détails</a>`
-  const point_upload_link = `<a href="${Utils.getGalerieUploadUrl(point_id)}" target="_blank" data-dialog-upload-back="map" data-dialog-upload="${point_id}">🌇 Upload</a>`
+  const point_upload_link = can_edit ? `<a href="${Utils.getGalerieUploadUrl(point_id)}" target="_blank" data-dialog-upload-back="map" data-dialog-upload="${point_id}">🌇 Upload</a>` : ""
 
   return `<div class="content-galerie_links">${point_admin_link}${point_detail_link}${point_upload_link}</div>`
 }

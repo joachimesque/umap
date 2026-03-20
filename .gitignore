@@ -30,3 +30,10 @@ tx
 charts/*/charts
 helmfile.yaml
 charts/*/Chart.lock
+
+uploads/
+var/data/
+
+srv/umap
+
+.venv

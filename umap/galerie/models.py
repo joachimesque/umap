@@ -107,7 +107,7 @@ def get_map_points_json(map_pk, user_can_edit):
                     crop="center",
                 ).url,
                 (
-                    datetime.strftime(picture.datetime, "%d %b %Y")
+                    datetime.strftime(picture.datetime, "%Y-%m-%d")
                     if picture.datetime
                     else ""
                 ),

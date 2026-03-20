@@ -423,3 +423,8 @@
         backdrop-filter: blur(4px);
     }
 }
+
+:is(button, input)[disabled] {
+    pointer-events: none;
+    background-color: grey;
+}

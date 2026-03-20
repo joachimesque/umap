@@ -41,10 +41,10 @@ const handleUploadDialog = (linkEl) => {
         .then(content => {
             uploadDialogEl.querySelector(".form_holder").innerHTML = content;
             uploadDialogEl.querySelector("form[method='POST']").setAttribute("action", formAction);
-
+            uploadDialogEl.querySelector("form[method='POST']").addEventListener('submit', (e) => {
+                e.target.querySelector("[type='submit']").setAttribute('disabled', true);
+            })
         })
-
-    
 }
 
 const handleLightbox = (imgEl) => {

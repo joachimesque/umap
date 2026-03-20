@@ -362,7 +362,7 @@
     width: calc(100% - 5em);
     height: calc(100% - 5em);
 
-    button {
+    form button {
         position: absolute;
         inset-inline-end: 0;
         inset-block-start: 0;
@@ -388,6 +388,32 @@
     &::backdrop {
         background: #0005;
         backdrop-filter: blur(4px);
+    }
+
+
+    .navigation.navigation {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+
+      button {
+        background: transparent;
+        color: currentColor;
+        font-size: smaller;
+        font-weight: bolder;
+
+        &:first-of-type {
+            justify-content: start;
+        }
+        &:last-of-type {
+            justify-content: end;
+        }
+
+        span {
+            background: white;
+            padding: 1ex;
+            border-radius: 2px;
+        }
+      }
     }
 }
 

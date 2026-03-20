@@ -58,6 +58,9 @@ const handleLightbox = (imgEl) => {
         const dialogDivEl = document.createElement("div");
         const dialogFormEl = document.createElement("form");
         const dialogButtonEl = document.createElement("button");
+        const dialogButtonsHolder = document.createElement('div');
+        const dialogNextEl = document.createElement("button");
+        const dialogPrevEl = document.createElement("button");
 
         lightboxDialogEl.id = "lightbox";
 
@@ -65,16 +68,61 @@ const handleLightbox = (imgEl) => {
         dialogFormEl.setAttribute("method", "dialog");
         dialogButtonEl.textContent = "Fermer";
 
+        dialogButtonsHolder.classList.add('navigation')
+        dialogNextEl.setAttribute('type', 'button');
+        dialogNextEl.addEventListener('click', handleNextClick);
+        dialogNextEl.innerHTML = "<span>Suivante</span>";
+        dialogPrevEl.setAttribute('type', 'button');
+        dialogPrevEl.addEventListener('click', handlePrevClick);
+        dialogPrevEl.innerHTML = "<span>Précédente</span>";
+
+        dialogButtonsHolder.append(dialogPrevEl, dialogNextEl);
         dialogFormEl.append(dialogButtonEl);
 
-        lightboxDialogEl.append(dialogFormEl);
-        lightboxDialogEl.append(dialogDivEl);
+        lightboxDialogEl.append(dialogFormEl, dialogDivEl, dialogButtonsHolder);
 
         document.body.append(lightboxDialogEl);
     }
 
     lightboxDialogEl.showModal();
-    lightboxDialogEl.querySelector(".img_holder").innerHTML = `<img src="${imgEl.parentElement.href}" alt="">`;
+    updateLightboxImage(imgEl.parentElement.href);
+    const galleryUrls = [...imgEl.closest(".galerie_picture-list, .content-galerie").querySelectorAll("a[href]:has(img)")].map(i => i.href);
+    window.lightbox_current_urls = galleryUrls;
+
+    lightboxDialogEl.addEventListener('keydown', handleLightboxKeydown)
+    lightboxDialogEl.addEventListener('close', () => {
+        lightboxDialogEl.removeEventListener('keydown', handleLightboxKeydown)
+    })
+}
+
+const handleLightboxKeydown = e => {
+    if (e.key == "Escape") { document.querySelector("#lightbox")?.close() };
+    if (e.key == "ArrowLeft") { handlePrevClick() };
+    if (e.key == "ArrowRight") { handleNextClick() };
+}
+
+const handleNextClick = () => {
+    const currentIndex = window.lightbox_current_urls.indexOf(window.lightbox_current_img);
+    let newIndex = currentIndex + 1;
+    if (newIndex > window.lightbox_current_urls.length - 1) {
+        newIndex = 0;
+    }
+    updateLightboxImage(window.lightbox_current_urls[newIndex]);
+}
+const handlePrevClick = () => {
+    const currentIndex = window.lightbox_current_urls.indexOf(window.lightbox_current_img);
+    let newIndex = currentIndex - 1;
+    if (newIndex < 0) {
+        newIndex = window.lightbox_current_urls.length - 1
+    }
+    updateLightboxImage(window.lightbox_current_urls[newIndex]);
+}
+
+const updateLightboxImage = (imgUrl) => {
+    const imageHolder = document.querySelector("#lightbox .img_holder");
+    if (!imageHolder) return;
+    imageHolder.innerHTML = `<img src="${imgUrl}" alt="">`;
+    window.lightbox_current_img = imgUrl;
 }
 
 document.addEventListener("click", (e) => {

@@ -400,6 +400,7 @@
         color: currentColor;
         font-size: smaller;
         font-weight: bolder;
+        align-items: end;
 
         &:first-of-type {
             justify-content: start;

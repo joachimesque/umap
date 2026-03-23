@@ -86,7 +86,7 @@ const handleLightbox = (imgEl) => {
 
     lightboxDialogEl.showModal();
     updateLightboxImage(imgEl.parentElement.href);
-    const galleryUrls = [...imgEl.closest(".galerie_picture-list, .content-galerie").querySelectorAll("a[href]:has(img)")].map(i => i.href);
+    const galleryUrls = [...imgEl.closest(".galerie_picture-list, .content-galerie, .point_pictures").querySelectorAll("a[href]:has(img)")].map(i => i.href);
     window.lightbox_current_urls = galleryUrls;
 
     lightboxDialogEl.addEventListener('keydown', handleLightboxKeydown)

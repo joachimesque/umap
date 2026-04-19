@@ -394,6 +394,7 @@
     .navigation.navigation {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
+      pointer-events: none;
 
       button {
         background: transparent;
@@ -401,6 +402,11 @@
         font-size: smaller;
         font-weight: bolder;
         align-items: end;
+        pointer-events: all;
+
+        &:focus {
+            outline-offset: -3px;
+        }
 
         &:first-of-type {
             justify-content: start;

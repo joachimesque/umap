@@ -393,7 +393,7 @@
 
     .navigation.navigation {
       display: grid;
-      grid-template-columns: 1fr 2fr;
+      grid-template-columns: repeat(3, 1fr);
 
       button {
         background: transparent;
@@ -406,6 +406,7 @@
             justify-content: start;
         }
         &:last-of-type {
+            grid-column: 3;
             justify-content: end;
         }
 

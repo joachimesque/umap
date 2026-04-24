@@ -446,24 +446,24 @@ export default class Umap {
         action: () => DOMUtils.copyToClipboard(latlng),
       },
     ]
-    if (this.properties.urls.routing) {
-      items.push({
-        label: translate('Directions from here'),
-        action: () => this.openExternalRouting(event),
-      })
-    }
-    if (this.properties.ORSAPIKey) {
-      items.push({
-        label: translate('Compute isochrone from here'),
-        action: () => this.askForIsochrone(event),
-      })
-    }
-    if (this.properties.urls.edit_in_osm) {
-      items.push({
-        label: translate('Edit in OpenStreetMap'),
-        action: () => this.editInOSM(event),
-      })
-    }
+    // if (this.properties.urls.routing) {
+    //   items.push({
+    //     label: translate('Directions from here'),
+    //     action: () => this.openExternalRouting(event),
+    //   })
+    // }
+    // if (this.properties.ORSAPIKey) {
+    //   items.push({
+    //     label: translate('Compute isochrone from here'),
+    //     action: () => this.askForIsochrone(event),
+    //   })
+    // }
+    // if (this.properties.urls.edit_in_osm) {
+    //   items.push({
+    //     label: translate('Edit in OpenStreetMap'),
+    //     action: () => this.editInOSM(event),
+    //   })
+    // }
     if (items.length) items.unshift('-')
     return items
   }

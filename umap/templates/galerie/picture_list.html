@@ -1,0 +1,48 @@
+{% extends "umap/content.html" %}
+
+{% load umap_tags i18n thumbnail %}
+
+{% block head_title %}Orphelines ({{ object_list.count }}) - {{ SITE_DESCRIPTION }}{% endblock head_title %}
+
+{% block header %}
+<header class="wrapper row">
+    <nav class="umap-nav">
+      <section>
+        {% include "umap/branding.html" %}
+      </section>
+      <section>
+        <ul>
+            <li>
+              <a href="{% url 'galerie:index' %}">Points</a>
+            </li>
+        </ul>
+      </section>
+    </nav>
+</header>
+{% endblock header %}
+
+{% block content %}
+<main class="wrapper">
+  <div class="row">
+    <h1>Orphelines <small>({{ object_list.count }})</small></h1>
+    <ul class="galerie_picture-list">
+    {% for picture in object_list %}
+        <li class="galerie_picture">
+            <a href="{{ picture.file.url }}">
+                {% thumbnail picture.file "300x300" crop="center" as im %}
+                    <img src="{{ im.url }}" alt="" data-lightbox>
+                {% endthumbnail %}
+                <span class="date">{{ picture.datetime }}</span>
+            </a>
+            {% if user.is_authenticated %}
+                <a class="admin_link" href="{% url 'admin:galerie_picture_change' picture.uuid %}">Admin</a>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>No pictures.</li>
+    {% endfor %}
+    </ul>
+  </div>
+</main>
+{% endblock content %}
+

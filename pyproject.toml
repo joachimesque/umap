@@ -39,6 +39,8 @@ dependencies = [
   "rjsmin==1.2.5",
   "social-auth-core==4.8.1",
   "social-auth-app-django==5.6.0",
+  "sorl-thumbnail==12.11.0",
+  "py-staticmaps==0.3.0",
 ]
 
 [project.optional-dependencies]

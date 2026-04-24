@@ -50,6 +50,7 @@ urlpatterns = [
         can_view_map(views.MapDownload.as_view()),
         name="map_download",
     ),
+    path("galerie/", include("umap.galerie.urls")),
 ]
 
 i18n_urls = [
@@ -104,12 +105,12 @@ i18n_urls += decorated_patterns(
     ),
 )
 i18n_urls += decorated_patterns(
-    [ensure_csrf_cookie],
+    [login_required, ensure_csrf_cookie],
     path("map/", views.MapPreview.as_view(), name="map_preview"),
     path("map/new/", views.MapNew.as_view(), name="map_new"),
 )
 i18n_urls += decorated_patterns(
-    [login_required_if_not_anonymous_allowed, never_cache],
+    [login_required, never_cache],
     path("map/create/", views.MapCreate.as_view(), name="map_create"),
 )
 i18n_urls += decorated_patterns(

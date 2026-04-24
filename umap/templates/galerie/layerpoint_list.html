@@ -1,0 +1,157 @@
+{% extends "umap/content.html" %}
+
+{% load galerie_tags i18n thumbnail %}
+
+{% block head_title %}Points ({{ page_obj.paginator.count }}) - {{ SITE_DESCRIPTION }}{% endblock head_title %}
+
+{% block header %}
+<header class="wrapper row">
+    <nav class="umap-nav">
+      <section>
+        {% include "umap/branding.html" %}
+      </section>
+      <section>
+        <ul>
+            <li>
+              <a href="{% url 'galerie:orphelines' %}">Orphelines</a>
+            </li>
+        </ul>
+      </section>
+    </nav>
+</header>
+{% endblock header %}
+
+{% block content %}
+<main class="wrapper">
+    <div class="row">
+        <h1>Points <small>({{ page_obj.paginator.count }})</small></h1>
+        
+        <details class="galerie_layerpoint-filters" {% if request.GET.date or request.GET.type %}open{% endif %}>
+            <summary>Filtres</summary>
+            <div>
+                <ul>
+                    <li><a {% if request.GET.type == 'peinture' %}aria-current="page"{% endif %} href="?{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}type=peinture">
+                        🎨 peinture
+                    </a></li>
+                    <li><a {% if request.GET.type == 'dessin' %}aria-current="page"{% endif %} href="?{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}type=dessin">
+                        ✏️ dessin
+                    </a></li>
+                    <li><a {% if request.GET.type == 'autre' %}aria-current="page"{% endif %} href="?{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}type=autre">
+                        ● autre
+                    </a></li>
+                    <li><a {% if not request.GET.type %}inert{% else %}href="?{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}{% endif %}"{% endif %}>
+                        ✖️ Retirer le filtre
+                    </a></li>
+                </ul>
+                <form method="GET">
+                    {% if request.GET.type %}<input type="hidden" name="type" value="{{ request.GET.type }}">{% endif %}
+                    {% if request.GET.sort %}<input type="hidden" name="sort" value="{{ request.GET.sort }}">{% endif %}
+                    <input id="date_filter" type="date" name="date" {% if request.GET.date %}class="filled" value="{{ request.GET.date }}"{% endif %}>
+                    <button id="date_filter_reset" type="button" class="button icon">✖️</button>
+                    <input type="submit" value="Appliquer">
+                </form>
+                <script type="module">
+                    document.getElementById('date_filter_reset').addEventListener('click', () => {
+                        document.querySelector('#date_filter').value = null;
+                        document.querySelector('#date_filter').classList.remove("filled");
+                    })
+                    document.getElementById('date_filter').addEventListener('change', (e) => {
+                        if (!!e.target.value) {
+                            document.querySelector('#date_filter').classList.add("filled");
+                        } else {
+                            document.querySelector('#date_filter').classList.remove("filled");
+                        }
+                    })
+                </script>
+            </div>
+        </details>
+
+        <div class="galerie_layerpoint-sort">
+            <strong>Ordre</strong>
+            <ul>
+                <li><a {% if not request.GET.sort %}aria-current="page"{% endif %} href="?{% if request.GET.type %}type={{ request.GET.type }}{% endif %}{% if request.GET.date %}date={{ request.GET.date }}{% endif %}">Par date du point</a></li>
+                <li><a {% if request.GET.sort == 'latest_photos' %}aria-current="page"{% endif %} href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}sort=latest_photos">Par photo la plus récente</a></li>
+                <li><a {% if request.GET.sort == 'latest_uploads' %}aria-current="page"{% endif %} href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}sort=latest_uploads">Par ajout de photo le plus récent</a></li>
+            </ul>
+        </div>
+
+
+        <ul class="galerie_layerpoint-list">
+        {% for layer_point in object_list %}
+            <li>
+                <span class="point_thumbmap">
+                    <a href="{{ layer_point.permalink | default:'#' }}" class="point_link">
+                        <img src="{{ layer_point.get_thumbmap }}" alt="" width="150" />
+                    </a>
+                </span>
+                <span class="point_info">
+                    <span>
+                        <strong>{{ layer_point.pk }}</strong> <a href="{% url 'galerie:point' pk=layer_point.pk %}" class="point_link">
+                          Détail →</a>
+                    </span>
+                    {% if user.is_authenticated %}
+                        <a class="admin_link" href="{% url 'admin:galerie_layerpoint_change' layer_point.pk %}">Admin</a>
+                    {% endif %}
+                    <span>{{ layer_point.layer | default:"Pas de calque" }}, <date>{{ layer_point.date | default:"Pas de date" }}</date></span>
+                    <code>{{ layer_point.json_data.geometry.coordinates }}</code>
+                </span>
+                <span class="point_content">
+                    {% if layer_point.json_data.properties.name %}
+                        <span class="name">{{ layer_point.json_data.properties.name }}</span>
+                    {% endif %}
+                    {% if layer_point.json_data.properties.description %}
+                        <span class="description">{{ layer_point.json_data.properties.description | convert_links }}</span>
+                    {% endif %}
+                </span>
+
+                <ul class="point_pictures">
+                    {% for picture in layer_point.picture_set.all %}
+                    <li class="galerie_picture">
+                        <a href="{{ picture.file.url }}">
+                            {% thumbnail picture.file "150x150" crop="center" as im %}
+                                <img src="{{ im.url }}" alt="" data-lightbox>
+                            {% endthumbnail %}
+                            <span class="date">{{ picture.datetime|date:"Y-m-d H:i"|default:" " }}</span>
+                        </a>
+                        {% if user.is_authenticated %}
+                            <a class="admin_link" href="{% url 'admin:galerie_picture_change' picture.uuid %}">Admin</a>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                    {% if user.is_authenticated %}
+                    <li class="galerie_picture_upload">
+                        <a href="{% url 'galerie:upload_files' %}?point={{ layer_point.pk }}">
+                            <i class="icon icon-24 icon-upload" aria-hidden="true"></i>
+                            Ajouter des images
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </li>
+        {% endfor %}
+        </ul>
+
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}page=1">&laquo; first</a>
+                <a href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}page={{ page_obj.previous_page_number }}">previous</a>
+            {% else %}
+                <a href="#" inert>&laquo; first</a>
+                <a href="#" inert>previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}page={{ page_obj.next_page_number }}">next ➼</a>
+                <a href="?{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}{% if request.GET.date %}date={{ request.GET.date }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}page={{ page_obj.paginator.num_pages }}">last ➽</a>
+            {% else %}
+                <a href="#" inert>next ➼</a>
+                <a href="#" inert>last ➽</a>
+            {% endif %}
+        </div>
+    </div>
+</main>
+{% endblock content %}

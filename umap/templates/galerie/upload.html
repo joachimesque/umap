@@ -1,0 +1,39 @@
+{% extends "umap/content.html" %}
+
+{% load galerie_tags i18n thumbnail %}
+
+{% block head_title %}Upload de photos - {{ SITE_DESCRIPTION }}{% endblock head_title %}
+
+{% block header %}
+<header class="wrapper row">
+    <nav class="umap-nav">
+      <section>
+        {% include "umap/branding.html" %}
+      </section>
+      <section>
+        <ul>
+            <li>
+              <a href="{% url 'galerie:index' %}">Points</a>
+            </li>
+            <li>
+              <a href="{% url 'galerie:orphelines' %}">Orphelines</a>
+            </li>
+        </ul>
+      </section>
+    </nav>
+</header>
+{% endblock header %}
+
+{% block content %}
+<main class="wrapper">
+  <div class="row">
+    <div class="col quarter mwide center">
+      <p><a href="{% url 'galerie:index' %}">← Retour</a></p>
+      <h1>Upload de photos</h1>
+      <section class="galerie_picture-upload">
+          {% include "galerie/components/upload_form.html" %}
+      </section>
+    </div>
+  </div>
+</main>
+{% endblock content %}
